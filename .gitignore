@@ -1,0 +1,42 @@
+# env
+.env
+
+# virtual env
+venv/
+.venv/
+
+# python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# database
+chat_memory.db
+pdf_sessions.json
+
+# vector db
+chroma_db/
+
+# uploads/data
+data/
+uploads/
+
+# logs
+server5501.err
+server5501.out
+*.log
+*.err
+*.out
+
+# zip archives
+*.zip
+
+# empty/junk dirs
+lo_profile/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# vscode
+.vscode/

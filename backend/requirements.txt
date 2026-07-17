@@ -1,0 +1,34 @@
+# Backend API server
+fastapi
+uvicorn[standard]
+python-multipart
+python-dotenv
+
+# Data validation and database
+pydantic
+sqlalchemy
+
+# Auth - JWT + secure password hashing
+python-jose[cryptography]
+passlib[bcrypt]
+
+# Rate limiting
+slowapi
+
+# AI model providers
+groq
+google-genai
+google-generativeai
+
+# Agent workflow
+langgraph
+langchain
+
+# PDF reading and RAG/vector search
+pypdf
+python-docx
+chromadb
+
+# Web search
+tavily-python
+psycopg2-binary

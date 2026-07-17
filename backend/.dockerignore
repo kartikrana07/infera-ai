@@ -1,0 +1,11 @@
+venv/
+__pycache__/
+*.pyc
+*.pyo
+.env
+chroma_db/
+chat_memory.db
+data/
+*.log
+*.err
+*.out

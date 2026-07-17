@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infera AI</title>
+    <link rel="stylesheet" href="style.css?v=55">
+</head>
+<body>
+    <section id="authScreen" class="auth-screen">
+        <div class="auth-card">
+            <div class="brand auth-brand">
+                <img class="brand-logo" src="assets/infera-logo.svg" alt="Infera AI logo">
+                <div>
+                    <h1>Infera AI</h1>
+                    <p>Login to your AI workspace</p>
+                </div>
+            </div>
+
+            <div class="auth-tabs">
+                <button id="loginTab" class="active" type="button" onclick="setAuthMode('login')">Login</button>
+                <button id="registerTab" type="button" onclick="setAuthMode('register')">Register</button>
+            </div>
+
+            <form id="authForm" class="auth-form">
+                <input id="authName" type="text" placeholder="Full name" autocomplete="name">
+                <input id="authEmail" type="email" placeholder="Email" autocomplete="email" required>
+                <input id="authPassword" type="password" placeholder="Password" autocomplete="current-password" required>
+                <button id="authSubmitBtn" class="send-btn" type="submit">Login</button>
+                <p id="authStatus" class="auth-status"></p>
+            </form>
+        </div>
+    </section>
+
+    <div id="sidebarOverlay" class="sidebar-overlay" onclick="closeMobileSidebar()"></div>
+    <div class="app">
+        <aside class="sidebar">
+            <div class="brand">
+                <img class="brand-logo" src="assets/infera-logo.svg" alt="Infera AI logo">
+                <div>
+                    <h1>Infera AI</h1>
+                    <p>AI job intelligence workspace</p>
+                </div>
+                <button class="sidebar-close-btn" type="button" onclick="closeMobileSidebar()" aria-label="Close sidebar">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M15 6l-6 6 6 6"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="sidebar-status">
+                <span></span>
+                Ready for chat, PDF and code
+            </div>
+
+            <button id="newChatBtn" class="new-chat-btn" type="button" onclick="newChat()">
+                <span>+</span>
+                New chat
+            </button>
+
+            <div class="user-strip">
+                <span id="userName">Guest</span>
+                <button type="button" onclick="logout()">Logout</button>
+            </div>
+
+            <section class="panel history-panel">
+                <div class="panel-title">
+                    <span>Saved chats</span>
+                    <small id="historyCount">0</small>
+                </div>
+                <div id="chatHistory" class="chat-history"></div>
+            </section>
+
+            <section class="panel quick-panel">
+                <div class="panel-title">
+                    <span>Quick Actions</span>
+                </div>
+                <div class="quick-grid">
+                    <button type="button" onclick="quickPrompt('Explain this code: ')">Explain Code</button>
+                    <button type="button" onclick="quickPrompt('Find latest jobs for: ')">Find Jobs</button>
+                    <button type="button" onclick="openPdfPicker()">Attach File</button>
+                    <button type="button" onclick="quickPrompt('Fix this error: ')">Fix Error</button>
+                </div>
+            </section>
+
+            <section class="panel modules-panel">
+                <div class="panel-title">
+                    <span>AI Modules</span>
+                </div>
+                <div class="module-list">
+                    <div><span>Chat</span><strong>Active</strong></div>
+                    <div><span>Code</span><strong>Active</strong></div>
+                    <div><span>PDF RAG</span><strong>Active</strong></div>
+                    <div><span>Voice</span><strong id="voiceModuleState">Ready</strong></div>
+                    <div><span>Job Search</span><strong>Active</strong></div>
+                </div>
+            </section>
+
+            <p id="voiceStatus" class="status-text sr-status">Voice ready</p>
+        </aside>
+
+        <main class="chat-area">
+            <header class="chat-header">
+                <div class="mobile-title-row">
+                    <button id="mobileMenuBtn" class="mobile-menu-btn" type="button" onclick="openMobileSidebar()" aria-label="Open sidebar">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M4 6h16"></path>
+                            <path d="M4 12h16"></path>
+                            <path d="M4 18h16"></path>
+                        </svg>
+                    </button>
+                    <div>
+                        <p class="chat-kicker">Workspace</p>
+                        <h2>Infera AI Assistant</h2>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button id="themeToggleBtn" class="header-btn" type="button" onclick="toggleTheme()">Light</button>
+                    <div class="session-pill" id="sessionInfo">New chat</div>
+                </div>
+            </header>
+
+            <section id="chatBox" class="chat-box" aria-live="polite"></section>
+
+            <footer class="composer">
+                <div class="composer-shell">
+                    <div id="attachmentPreview" class="attachment-preview" hidden></div>
+                    <textarea id="userInput" rows="1" placeholder="Ask anything, paste code, or ask about your attached file..."></textarea>
+                    <div class="composer-actions">
+                        <input type="file" id="imageInput" accept="image/*" hidden>
+                        <input type="file" id="pdfFile" accept="image/*,.pdf,.docx,.txt,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain" hidden>
+                        <div class="attach-wrap">
+                            <button id="attachFileBtn" class="tool-btn" type="button" title="Attach file" onclick="toggleAttachmentMenu()" aria-label="Attach file" aria-haspopup="menu" aria-expanded="false">
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="m21.4 11.6-8.8 8.8a6 6 0 0 1-8.5-8.5l9.4-9.4a4 4 0 0 1 5.7 5.7l-9.4 9.4a2 2 0 0 1-2.8-2.8l8.8-8.8"></path>
+                                </svg>
+                            </button>
+                            <div id="attachmentMenu" class="attachment-menu" role="menu" hidden>
+                                <button type="button" role="menuitem" onclick="openPdfPicker()">Attach file</button>
+                            </div>
+                        </div>
+                        <button id="composerMicBtn" class="tool-btn" type="button" title="Voice input" onclick="startListening()" aria-label="Voice input">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3z"></path>
+                                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                                <path d="M12 19v3"></path>
+                            </svg>
+                        </button>
+                        <button id="regenerateBtn" class="ghost-btn" type="button" onclick="regenerateAnswer()" disabled>Regenerate</button>
+                        <button id="sendBtn" class="send-btn icon-send-btn" type="button" onclick="handlePrimaryAction()" aria-label="Send">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M5 12h14"></path>
+                                <path d="m13 6 6 6-6 6"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <p class="composer-hint">Press Enter to send. Use Shift + Enter for a new line.</p>
+            </footer>
+        </main>
+    </div>
+    <div id="toastRoot" class="toast-root" aria-live="polite"></div>
+
+    <script src="script.js?v=55"></script>
+</body>
+</html>
